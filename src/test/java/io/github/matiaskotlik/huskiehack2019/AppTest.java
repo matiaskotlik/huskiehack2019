@@ -6,9 +6,15 @@ package io.github.matiaskotlik.huskiehack2019;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class AppTest {
     @Test public void testAppHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+        System.out.println("hi");
     }
+
+
+
+
 }
