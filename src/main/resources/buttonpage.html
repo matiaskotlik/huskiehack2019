@@ -1,6 +1,8 @@
 <html lang="en">
  
 <head>
+    <div style="background-color:white;background-image:url(image\Hathathonfinalfinal.PNG);">
+
     <meta charset="UTF-8">
     <title>Buttons</title>
     <style>
@@ -27,18 +29,16 @@
         }
     </style>
 </head>
- 
-<body>
     <button onclick="onClick(this)" id="button1">Recieve</button>
     <button onclick="onClick(this)" id="button2">Give</button>
     <form action="" id="form1">
         <fieldset>
             <legend>Recieve a compliment:</legend> First name:
             <br>
-            <input type="text" name="firstname" value="">
+            <input type="text" name="%firstname%" value="">
             <br> Password:
             <br>
-            <input type="text" name="psw" value="">
+            <input type="text" name="%psw%" value="">
             <br>
             <br>
             <input type="submit" value="Recieve :)"> </fieldset>
@@ -47,14 +47,15 @@
         <fieldset>
             <legend>Give a compliment:</legend> First name (Recipient):
             <br>
-            <input type="text" name="firstname" value="">
+            <input type="text" name="%firstname0%" value="">
             <br> Compliment:
             <br>
-            <input type="text" name="compliment" value="">
+            <input type="text" name="%compliment%" value="">
             <br>
             <br>
-            <input type="submit" value="Submit"> </fieldset>
+            <input type="submit" value="Submit :)"> </fieldset>
     </form>
+    </div>
 </body>
 <script>
     function onClick(x) {
