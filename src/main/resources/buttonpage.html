@@ -1,8 +1,8 @@
-<html lang="en">
- 
-<head>
-    <div style="background-color:white;background-image:url(image\Hathathonfinalfinal.PNG);">
+<!doctype html>
 
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <title>Buttons</title>
     <style>
@@ -12,56 +12,44 @@
             background-color: black;
             font-size: 30px;
         }
-        
+
         button:hover {
             border: 2px solid yellow;
             color: yellow;
             background-color: black;
             font-size: 30px;
         }
-        
+
         #form1 {
             visibility: hidden;
         }
-        
+
         #form2 {
             visibility: hidden;
         }
+
     </style>
 </head>
-    <button onclick="onClick(this)" id="button1">Recieve</button>
-    <button onclick="onClick(this)" id="button2">Give</button>
-    <form action="" id="form1">
-        <fieldset>
-            <legend>Recieve a compliment:</legend> First name:
-            <br>
-            <input type="text" name="%firstname%" value="">
-            <br> Password:
-            <br>
-            <input type="text" name="%psw%" value="">
-            <br>
-            <br>
-            <input type="submit" value="Recieve :)"> </fieldset>
-    </form>
-    <form action="" id="form2">
-        <fieldset>
-            <legend>Give a compliment:</legend> First name (Recipient):
-            <br>
-            <input type="text" name="%firstname0%" value="">
-            <br> Compliment:
-            <br>
-            <input type="text" name="%compliment%" value="">
-            <br>
-            <br>
-            <input type="submit" value="Submit :)"> </fieldset>
-    </form>
-    </div>
-</body>
+<body>
+<h1>Logged in as: %name%</h1>
+<button id="recieve-btn">Recieve</button>
+<button onclick="toggleForm()" id="give-btn">Give</button>
+<form action="/give" method="POST" id="give-form">
+    <fieldset>
+        <legend>Who would you like to compliment?</legend>
+        <input type="text" name="name" id="name" placeholder="Name">
+        <input type="submit" value="Submit Compliment :)">
+    </fieldset>
+</form>
 <script>
-    function onClick(x) {
-        if (x.id === 'button1') document.getElementById("form1").style.visibility = "visible";
-        if (x.id === 'button2') document.getElementById("form2").style.visibility = "visible";
+    function toggleForm() {
+        e = document.getElementById("give-form");
+        if (e.style.display === 'none') {
+            e.style.display = 'block'
+        } else {
+            e.style.display = 'none'
+        }
     }
 </script>
- 
+</body>
 </html>

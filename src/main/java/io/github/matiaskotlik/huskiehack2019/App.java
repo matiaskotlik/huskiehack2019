@@ -33,7 +33,6 @@ public class App extends NanoHTTPD {
 		btnTmp = getTemplate("/buttonpage.html");
 
 		response404 = Response.newFixedLengthResponse("Error 404 File Not Found");
-		response404.setStatus(Status.OK);
 	}
 
 	public Session getSession(IHTTPSession ihttpSession) {
@@ -63,6 +62,16 @@ public class App extends NanoHTTPD {
 	public Response serve(IHTTPSession ihttpSession) {
 		Method method = ihttpSession.getMethod();
 		String uri = ihttpSession.getUri();
+		try {
+			ihttpSession.parseBody(new HashMap<>());
+		} catch (IOException e) {
+			System.err.println("Could not parse body");
+		} catch (ResponseException e) {
+			System.err.println("ResponseException when trying to parse body");
+		}
+
+		System.out.println(getSessionDataMap(getSession(ihttpSession)));
+		System.out.println(sessionList);
 
 		if (uri.equals("/")) {
 			Session session = getSession(ihttpSession);
@@ -71,8 +80,17 @@ public class App extends NanoHTTPD {
 			} else {
 				return ss(loginTmp.render(getSessionDataMap(session)));
 			}
+		} else if (uri.equals("/signin")) {
+//			System.out.println(ihttpSession.getParms());
+			Session session = getSession(ihttpSession);
+			session.setName(ihttpSession.getParms().get("name"));
+			return redirect("/");
 		}
 		return response404;
+	}
+
+	public Response redirect(String uri) {
+		return Response.newFixedLengthResponse("<script>window.location.replace(\"" + uri +"\");</script>");
 	}
 
 	public Response ss(String msg) {

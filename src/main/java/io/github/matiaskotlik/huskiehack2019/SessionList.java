@@ -10,4 +10,9 @@ public class SessionList {
 	public Session getSession(String sessionId) {
 		return map.get(sessionId);
 	}
+
+	@Override
+	public String toString() {
+		return map.toString();
+	}
 }

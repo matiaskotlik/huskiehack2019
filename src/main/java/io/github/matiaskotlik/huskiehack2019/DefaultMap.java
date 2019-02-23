@@ -3,15 +3,18 @@ package io.github.matiaskotlik.huskiehack2019;
 import java.util.HashMap;
 
 public class DefaultMap<K, V> extends HashMap<K, V> {
-	protected SimpleGenerator<V> simpleGenerator;
+	protected SimpleGenerator<V> defaultValueGenerator;
 
-	public DefaultMap(SimpleGenerator<V> simpleGenerator) {
+	public DefaultMap(SimpleGenerator<V> defaultValueGenerator) {
 		super();
-		this.simpleGenerator = simpleGenerator;
+		this.defaultValueGenerator = defaultValueGenerator;
 	}
 
 	@Override
 	public V get(Object key) {
-		return containsKey(key) ? super.get(key) : simpleGenerator.generate();
+		if (!containsKey(key)) {
+			put((K) key, defaultValueGenerator.generate());
+		}
+		return super.get(key);
 	}
 }
