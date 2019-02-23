@@ -4,17 +4,29 @@
 package io.github.matiaskotlik.huskiehack2019;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.List;
 
 public class AppTest {
-    @Test public void testAppHasAGreeting() {
-        System.out.println("hi");
-    }
+	@Test
+	public void testComplimentStorage() {
+		List<String> meganComps = new ArrayList<>(Arrays.asList(
+				"You like Mtn Dew!",
+				"You are a great coder!"));
 
+		ComplimentsStorage storage = new ComplimentsStorage();
+		storage.store("Matias Kotlik", "You hate Maven!");
+		storage.store("Megan Ja", meganComps.get(0));
+		storage.store("Megan Ja", meganComps.get(1));
 
+		assert storage.get("Matias Kotlik").equals("You hate Maven!");
 
+		String c1 = storage.get("Megan Ja");
+		assert meganComps.contains(c1);
+		meganComps.remove(meganComps.indexOf(c1));
 
+		assert storage.get("Megan Ja").equals(meganComps.get((0)));
+	}
 }
