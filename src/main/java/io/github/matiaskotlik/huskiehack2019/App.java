@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class App extends NanoHTTPD {
-	private Template indexTemplate;
-	private Template mainTemplate;
+	private Template loginTmp;
+	private Template btnTmp;
 
 	private SessionList sessionList;
 
@@ -29,8 +29,8 @@ public class App extends NanoHTTPD {
 
 		sessionList = new SessionList();
 
-		indexTemplate = getTemplate("/index.html");
-		mainTemplate = getTemplate("/buttonpage.html");
+		loginTmp = getTemplate("/index.html");
+		btnTmp = getTemplate("/buttonpage.html");
 
 		response404 = Response.newFixedLengthResponse("Error 404 File Not Found");
 		response404.setStatus(Status.OK);
@@ -53,7 +53,9 @@ public class App extends NanoHTTPD {
 
 	public Map<String, String> getSessionDataMap(Session session) {
 		Map<String, String> map = new HashMap<>();
-		map.put("name", session.getName());
+		if (session.getName() != null) {
+			map.put("name", session.getName());
+		}
 		return map;
 	}
 
@@ -64,14 +66,12 @@ public class App extends NanoHTTPD {
 
 		if (uri.equals("/")) {
 			Session session = getSession(ihttpSession);
-			session.setName("Matias Kotlik");
-			return ss(indexTemplate.render(getSessionDataMap(session)));
-		} else if (uri.equals("/info")) {
-			ihttpSession.getCookies().set("session", "test", Integer.MAX_VALUE);
-			return ss("Method: " + method.name()
-					+ "\nCookies: " + ihttpSession.getCookies().read("session"));
+			if (session.getName() != null) {
+				return ss(btnTmp.render(getSessionDataMap(session)));
+			} else {
+				return ss(loginTmp.render(getSessionDataMap(session)));
+			}
 		}
-
 		return response404;
 	}
 
