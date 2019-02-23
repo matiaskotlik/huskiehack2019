@@ -3,12 +3,39 @@
  */
 package io.github.matiaskotlik.huskiehack2019;
 
-public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
+import org.nanohttpd.protocols.http.IHTTPSession;
+import org.nanohttpd.protocols.http.NanoHTTPD;
+import org.nanohttpd.protocols.http.request.Method;
+import org.nanohttpd.protocols.http.response.Response;
+
+import java.io.IOException;
+
+public class App extends NanoHTTPD {
+	public App(int port) {
+		super(port);
+	}
+
+	@Override
+	public Response serve(IHTTPSession session) {
+		Method method = session.getMethod();
+		String uri = session.getUri();
+
+		return Response.newFixedLengthResponse("Hello World");
+	}
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+		int port = 0;
+		if (args.length == 1) {
+			port = Integer.parseInt(args[0]);
+		} else {
+			port = 8080;
+		}
+		App app = new App(port);
+		try {
+			app.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
+		} catch (IOException e) {
+			System.err.println("Couldn't start server.");
+			e.printStackTrace();
+		}
     }
 }
