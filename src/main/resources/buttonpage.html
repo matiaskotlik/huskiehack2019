@@ -1,0 +1,66 @@
+<html lang="en">
+ 
+<head>
+    <meta charset="UTF-8">
+    <title>Buttons</title>
+    <style>
+        button {
+            border: 2px solid yellow;
+            color: white;
+            background-color: black;
+            font-size: 30px;
+        }
+        
+        button:hover {
+            border: 2px solid yellow;
+            color: yellow;
+            background-color: black;
+            font-size: 30px;
+        }
+        
+        #form1 {
+            visibility: hidden;
+        }
+        
+        #form2 {
+            visibility: hidden;
+        }
+    </style>
+</head>
+ 
+<body>
+    <button onclick="onClick(this)" id="button1">Recieve</button>
+    <button onclick="onClick(this)" id="button2">Give</button>
+    <form action="" id="form1">
+        <fieldset>
+            <legend>Recieve a compliment:</legend> First name:
+            <br>
+            <input type="text" name="firstname" value="">
+            <br> Password:
+            <br>
+            <input type="text" name="psw" value="">
+            <br>
+            <br>
+            <input type="submit" value="Recieve :)"> </fieldset>
+    </form>
+    <form action="" id="form2">
+        <fieldset>
+            <legend>Give a compliment:</legend> First name (Recipient):
+            <br>
+            <input type="text" name="firstname" value="">
+            <br> Compliment:
+            <br>
+            <input type="text" name="compliment" value="">
+            <br>
+            <br>
+            <input type="submit" value="Submit"> </fieldset>
+    </form>
+</body>
+<script>
+    function onClick(x) {
+        if (x.id === 'button1') document.getElementById("form1").style.visibility = "visible";
+        if (x.id === 'button2') document.getElementById("form2").style.visibility = "visible";
+    }
+</script>
+ 
+</html>
