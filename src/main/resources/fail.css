@@ -1,0 +1,13 @@
+#hiddenLink{
+  display: none;
+}
+body {
+  background-image: url("sdas.gif");
+  background-size: cover;
+}
+p {
+  color: white;
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
