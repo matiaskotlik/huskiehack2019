@@ -1,28 +1,36 @@
 package io.github.matiaskotlik.huskiehack2019;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class ComplimentStorage implements Storage<String> {
 
-    Map<String, Deque<String>> complimentMap;
+	Map<String, Deque<String>> complimentMap;
 
-    public ComplimentStorage() {
-        complimentMap = new HashMap<>();
-    }
+	public ComplimentStorage() {
+		complimentMap = new HashMap<>();
+	}
 
-    @Override
-    public String get(String key) {
-        return complimentMap.get(key).pop();
-    }
+	@Override
+	public String get(String key) {
+		Deque<String> deque = complimentMap.get(key);
+		try {
+			return deque == null ? null : deque.pop();
+		} catch (NoSuchElementException e) {}
+		return null;
+	}
 
-    @Override
-    public boolean store(String key, String data) {
-        Deque<String> compliments = complimentMap.get(key);
-        if (compliments == null) {
-            compliments = new ArrayDeque<>();
-        }
-        compliments.push(data);
-        complimentMap.put(key, compliments);
-        return false;
-    }
+	@Override
+	public boolean store(String key, String data) {
+		Deque<String> compliments = complimentMap.get(key);
+		if (compliments == null) {
+			compliments = new ArrayDeque<>();
+		}
+		compliments.push(data);
+		complimentMap.put(key, compliments);
+		return false;
+	}
 }

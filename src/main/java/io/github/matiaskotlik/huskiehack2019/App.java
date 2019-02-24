@@ -3,6 +3,7 @@
  */
 package io.github.matiaskotlik.huskiehack2019;
 
+import io.github.matiaskotlik.huskiehack2019.ai.FakeSentimentAnalysis;
 import io.github.matiaskotlik.huskiehack2019.ai.SentimentAnalysis;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
@@ -12,8 +13,12 @@ import org.nanohttpd.protocols.http.response.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class App extends NanoHTTPD {
@@ -22,17 +27,27 @@ public class App extends NanoHTTPD {
 
 	private ComplimentStorage complimentStorage;
 
+	private Set<String> users;
+
 	private SessionList sessionList;
 
 	private Response response404;
+
+	private SentimentAnalysis sentimentAnalysis;
 
 	public App(int port) {
 		super(port);
 
 		sessionList = new SessionList();
 
+		users = new HashSet<>();
+
 		loginTmp = getTemplate("/index.html");
 		btnTmp = getTemplate("/buttonpage.html");
+
+		complimentStorage = new ComplimentStorage();
+
+		sentimentAnalysis = new SentimentAnalysis();
 
 		response404 = Response.newFixedLengthResponse("Error 404 File Not Found");
 	}
@@ -84,21 +99,37 @@ public class App extends NanoHTTPD {
 			}
 		} else if (uri.equals("/signin")) {
 			Session session = getSession(ihttpSession);
-			session.setName(ihttpSession.getParms().get("name"));
+			String name = ihttpSession.getParms().get("name");
+			session.setName(name);
+			users.add(name);
 			return redirect("/");
 		} else if (uri.equals("/give")) {
 			String name = ihttpSession.getParms().get("name");
 			String compliment = ihttpSession.getParms().get("compliment");
 			if (name != null && compliment != null) {
-				if (SentimentAnalysis.sentiment(compliment)) {
-					complimentStorage.store(name, compliment);
-					return ss("Your compliment was sent!");
+				if (users.contains(name)) {
+					System.out.println("analyzing " + compliment);
+					if (sentimentAnalysis.sentiment(compliment)) {
+						complimentStorage.store(name, compliment);
+						return ss("Your compliment was sent!");
+					} else {
+						return ss("Either your compliment is shit or our AI is, but either way, go fuck yourself.");
+					}
 				} else {
-					return ss("Either your compliment is shit or our AI is, but either way, go fuck yourself.");
+					return ss("That user does not exist. Maybe you spelled it wrong?");
 				}
 			}
 		} else if (uri.equals("/get")) {
-			return ss("You have BEAUTIFUL HTML NOT!");
+			String name = getSession(ihttpSession).getName();
+			System.out.println("getting compliment for name: " + name);
+			if (name != null) {
+				String compliment = complimentStorage.get(name);
+				return compliment == null ? ss("You have no compliments.") : ss(compliment);
+			}
+		} else if (uri.equals("/list")) {
+			StringBuilder listBuilder = new StringBuilder().append("[");
+			users.forEach(user -> listBuilder.append("\"").append(user).append("\","));
+			return ss(listBuilder.substring(0, listBuilder.length()-1) + "]");
 		}
 		return response404;
 	}
