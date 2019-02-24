@@ -7,7 +7,6 @@ import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
-import org.nanohttpd.protocols.http.response.Status;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -81,10 +80,11 @@ public class App extends NanoHTTPD {
 				return ss(loginTmp.render(getSessionDataMap(session)));
 			}
 		} else if (uri.equals("/signin")) {
-//			System.out.println(ihttpSession.getParms());
 			Session session = getSession(ihttpSession);
 			session.setName(ihttpSession.getParms().get("name"));
 			return redirect("/");
+		} else if (uri.equals("/get")) {
+			return ss("You have BEAUTIFUL HTML NOT!");
 		}
 		return response404;
 	}
