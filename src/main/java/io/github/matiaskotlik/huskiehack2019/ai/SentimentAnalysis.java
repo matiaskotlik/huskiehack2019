@@ -9,9 +9,9 @@ import java.util.List;
 
 public class SentimentAnalysis {
 
-	private SentimentAnalysis() {}
+	public SentimentAnalysis() {}
 
-	public static boolean sentiment(String text) {
+	public boolean sentiment(String text) {
 		StanfordCoreNLP stanfordCoreNLP = Pipeline.getPipeline();
 
 		CoreDocument coreDocument = new CoreDocument(text);
