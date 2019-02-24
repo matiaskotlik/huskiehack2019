@@ -2,18 +2,17 @@ package io.github.matiaskotlik.huskiehack2019;
 
 import java.util.*;
 
-public class ComplimentsStorage implements Storage<String> {
+public class ComplimentStorage implements Storage<String> {
 
     Map<String, Deque<String>> complimentMap;
 
-    public ComplimentsStorage() {
+    public ComplimentStorage() {
         complimentMap = new HashMap<>();
     }
 
     @Override
     public String get(String key) {
-        String temp = complimentMap.get(key).pop();
-        return temp;
+        return complimentMap.get(key).pop();
     }
 
     @Override

@@ -3,6 +3,7 @@
  */
 package io.github.matiaskotlik.huskiehack2019;
 
+import io.github.matiaskotlik.huskiehack2019.ai.SentimentAnalysis;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.request.Method;
@@ -18,6 +19,8 @@ import java.util.UUID;
 public class App extends NanoHTTPD {
 	private Template loginTmp;
 	private Template btnTmp;
+
+	private ComplimentStorage complimentStorage;
 
 	private SessionList sessionList;
 
@@ -72,8 +75,6 @@ public class App extends NanoHTTPD {
 			}
 		}
 
-		System.out.println(sessionList);
-
 		if (uri.equals("/")) {
 			Session session = getSession(ihttpSession);
 			if (session.getName() != null) {
@@ -89,7 +90,12 @@ public class App extends NanoHTTPD {
 			String name = ihttpSession.getParms().get("name");
 			String compliment = ihttpSession.getParms().get("compliment");
 			if (name != null && compliment != null) {
-				if ()
+				if (SentimentAnalysis.sentiment(compliment)) {
+					complimentStorage.store(name, compliment);
+					return ss("Your compliment was sent!");
+				} else {
+					return ss("Either your compliment is shit or our AI is, but either way, go fuck yourself.");
+				}
 			}
 		} else if (uri.equals("/get")) {
 			return ss("You have BEAUTIFUL HTML NOT!");
