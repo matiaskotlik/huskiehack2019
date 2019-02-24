@@ -1,5 +1,9 @@
 package io.github.matiaskotlik.huskiehack2019;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -8,10 +12,17 @@ import java.util.NoSuchElementException;
 
 public class ComplimentStorage implements Storage<String> {
 
-	Map<String, Deque<String>> complimentMap;
+	private Map<String, Deque<String>> complimentMap;
+	private ObjectMapper mapper;
 
 	public ComplimentStorage() {
-		complimentMap = new HashMap<>();
+		mapper = new ObjectMapper();
+		try {
+			complimentMap = mapper.readValue(new File("docs/compliments.db"), new TypeReference<Map<String, Deque<String>>>() {});
+		} catch (Exception e) {
+			e.printStackTrace();
+			complimentMap = new HashMap<>();
+		}
 	}
 
 	@Override
@@ -37,6 +48,15 @@ public class ComplimentStorage implements Storage<String> {
 		}
 		compliments.push(data);
 		complimentMap.put(key, compliments);
+		save();
 		return false;
+	}
+
+	public void save() {
+		try {
+			mapper.writerWithDefaultPrettyPrinter().writeValue(new File("docs/compliments.db"), complimentMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

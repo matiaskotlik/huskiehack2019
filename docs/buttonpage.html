@@ -59,7 +59,11 @@ function fetchCompliment() {
 
 function submitCompliment() {
     $.post('/give', {name: $('#name').val(), compliment: $('#compliment').val()}, function(response) {
-        alert(response);
+        if (response === 'NO') {
+            window.location.replace("/fail");
+        } else {
+            alert(response);
+        }
     });
 }
 

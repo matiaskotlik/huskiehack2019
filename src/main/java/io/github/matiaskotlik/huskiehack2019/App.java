@@ -154,7 +154,7 @@ public class App extends NanoHTTPD {
 						complimentStorage.store(name, compliment);
 						return ss("Your compliment was sent! Here is your code: 100111");
 					} else {
-						return ss("Either your compliment is shit or our AI is, but either way, go fuck yourself.");
+						return ss("NO");
 					}
 				} else {
 					return ss("That user does not exist. Maybe you spelled it wrong?");
@@ -179,6 +179,8 @@ public class App extends NanoHTTPD {
 					return FileResponse(LOCAL_DOCS_PATH + name);
 				}
 			}
+		} else if (uri.equals("/fail")) {
+			return FileResponse("docs/fail.html");
 		}
 		return Response.newFixedLengthResponse("Error 404 File not Found");
 	}
