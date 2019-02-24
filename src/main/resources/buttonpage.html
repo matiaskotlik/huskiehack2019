@@ -16,11 +16,13 @@
             background-color: black;
             font-size: 30px;
         }
+
+
     </style>
 </head>
 <body>
 <h1>Logged in as: %name%</h1>
-<button id="recieve-btn">Recieve</button>
+<button onclick="fetchCompliment()" id="recieve-btn">Recieve</button>
 <button onclick="toggleForm()" id="give-btn">Give</button>
 <form action="/give" method="POST" id="give-form">
     <fieldset>
@@ -31,6 +33,7 @@
     </fieldset>
 </form>
 <p id="recieve-form"></p>
+
 <script>
     function toggleForm() {
         e = document.getElementById("give-form");
@@ -40,15 +43,12 @@
             e.style.display = 'none'
         }
     }
+    function fetchCompliment() {
+        $.get("/get", function(compliment){
+            alert(compliment);
+        });
+    }
 </script>
-<script>
-    $(document).ready(function(){
-  $("recieve-btn").click(function(){
-    $.get("/get", function(compliment){
-      alert("Here is your compliment: " + compliment);
-    });
-  });
-});
-</script>
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 </body>
 </html>
