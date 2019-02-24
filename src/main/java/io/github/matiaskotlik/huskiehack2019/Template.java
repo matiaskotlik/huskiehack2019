@@ -12,18 +12,30 @@ public class Template {
 	private String raw;
 	private String surround = "%";
 
-	public Template(File file) throws FileNotFoundException {
-		FileInputStream fis = new FileInputStream(file);
+	public Template(File file) {
+		raw = readFile(file);
+	}
+
+	public String readFile(File file) {
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			return "File not found.";
+		}
 		byte[] data = new byte[(int) file.length()];
 		try {
 			fis.read(data);
 			fis.close();
-			raw = new String(data, StandardCharsets.UTF_8);
-			return;
+			return new String(data, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			System.err.println("Failed to read from file: " + file.getName());
 		}
-		raw = "Failed to read from file";
+		return "Failed to read from file";
+	}
+
+	public String getRaw() {
+		return raw;
 	}
 
 	public Template(String raw) {
@@ -31,7 +43,7 @@ public class Template {
 	}
 
 	public String render(Map<String, String> vars) {
-		String rendered = raw;
+		String rendered = getRaw();
 		for (Map.Entry<String, String> entry : vars.entrySet()) {
 			rendered = rendered.replace(surround + entry.getKey() + surround,
 					entry.getValue());

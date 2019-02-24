@@ -5,16 +5,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Buttons</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html {
+            height: 100%;
+            background-color: #45b5dd;
+            color: white;
+        }
+        #signin-form {
+            width: 90%;
+            margin: auto;
+        }
+        #signin-form * {
+            width: 100%;
+            margin: auto;
+            padding: 2px;
+         }
+    </style>
 </head>
 <body>
-<form action="/signin" method="POST">
-    <fieldset>
-        <legend>Sign Up/In</legend
-        <label for="name">Name</label>
-        <input type="text" placeholder="Enter Name" name="name" id="name" required>
-        <!--<label for="psw"><b>Password</b></label>-->
-        <!--<input type="password" placeholder="Enter Password" name="psw" id="psw" required>-->
-        <button type="submit" class="signup-btn">Sign Up/In</button>
-    </fieldset>
-</form>
+<div class="w3-container w3-card">
+    <h1>mySafespace</h1>
+</div>
+
+<div class="w3-container">
+    <hr>
+    <div class="w3-cell-row">
+        <form action="/signin" method="POST" id="signin-form">
+            <p class="desc">Sign in or create an account here, just type in your name</p>
+            <input type="text" placeholder="Enter Name" name="name" id="name" required>
+            <!--<label for="psw"><b>Password</b></label>-->
+            <!--<input type="password" placeholder="Enter Password" name="psw" id="psw" required>-->
+            <div class="submit">
+                <button type="submit" class="signup-btn">Sign Up/In</button>
+            </div>
+        </form>
+    </div>
+    <hr>
+</div>
 </body>
