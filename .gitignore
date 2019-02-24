@@ -8,3 +8,6 @@ build
 .idea
 **/*.iml
 out
+
+# FUCKING DS STORE FILES
+**/*.DS_Store
