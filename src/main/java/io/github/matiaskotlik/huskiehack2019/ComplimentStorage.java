@@ -26,7 +26,7 @@ public class ComplimentStorage implements Storage<String> {
 	}
 
 	public String pickDefaultMessage() {
-		return "FUCK YOU";
+		return "You're an amazing person!";
 	}
 
 	@Override
