@@ -30,6 +30,7 @@
         <input type="submit" value="Submit Compliment :)">
     </fieldset>
 </form>
+<p id="recieve-form"></p>
 <script>
     function toggleForm() {
         e = document.getElementById("give-form");
@@ -39,6 +40,15 @@
             e.style.display = 'none'
         }
     }
+</script>
+<script>
+    $(document).ready(function(){
+  $("recieve-btn").click(function(){
+    $.get("/get", function(compliment){
+      alert("Here is your compliment: " + compliment);
+    });
+  });
+});
 </script>
 </body>
 </html>
