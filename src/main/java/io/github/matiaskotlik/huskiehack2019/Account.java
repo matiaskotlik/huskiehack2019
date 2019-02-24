@@ -5,6 +5,10 @@ public class Account {
 	private String hashed;
 	private String salt;
 
+	public Account() {
+		this(null, null, null);
+	}
+
 	public Account(String name, String hashed, String salt) {
 		this.name = name;
 		this.hashed = hashed;
