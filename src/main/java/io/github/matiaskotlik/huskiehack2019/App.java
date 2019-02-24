@@ -3,7 +3,6 @@
  */
 package io.github.matiaskotlik.huskiehack2019;
 
-import io.github.matiaskotlik.huskiehack2019.ai.FakeSentimentAnalysis;
 import io.github.matiaskotlik.huskiehack2019.ai.SentimentAnalysis;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;

@@ -18,9 +18,15 @@ public class ComplimentStorage implements Storage<String> {
 	public String get(String key) {
 		Deque<String> deque = complimentMap.get(key);
 		try {
-			return deque == null ? null : deque.pop();
+			if (deque != null) {
+				return deque.pop();
+			}
 		} catch (NoSuchElementException e) {}
-		return null;
+		return pickDefaultMessage();
+	}
+
+	public String pickDefaultMessage() {
+		return "FUCK YOU";
 	}
 
 	@Override
