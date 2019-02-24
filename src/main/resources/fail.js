@@ -18,4 +18,4 @@ e.target="_blank";
 e.href=links[index];
 e.style.textAlign = "center";
 e.style.fontSize = "30px";
-e.style.weight="bold;"
+e.style.weight="bold";

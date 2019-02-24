@@ -2,12 +2,29 @@
   display: none;
 }
 body {
-  background-image: url("sdas.gif");
+  background-image: url("background.gif");
   background-size: cover;
 }
+
+img {
+  height: 50px;
+  width: 50px;
+  margin-top: 2.5%;
+  margin-left: 48%;
+}
+
+audio {
+  background-color: red;
+}
+
 p {
   color: white;
   text-align: center;
   font-size: 30px;
   font-weight: bold;
+  margin-top: 15%;
+}
+
+a:hover {
+  cursor: pointer;
 }
