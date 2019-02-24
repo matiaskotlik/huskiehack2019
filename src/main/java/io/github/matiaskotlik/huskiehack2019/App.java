@@ -4,6 +4,7 @@
 package io.github.matiaskotlik.huskiehack2019;
 
 import io.github.matiaskotlik.huskiehack2019.ai.SentimentAnalysis;
+import io.github.matiaskotlik.huskiehack2019.cryptography.Hasher;
 import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.request.Method;
@@ -31,7 +32,9 @@ public class App extends NanoHTTPD {
 
 	private ComplimentStorage complimentStorage;
 
-	private Set<String> users;
+	private UserAccounts users;
+
+	private Hasher hasher;
 
 	private SessionList sessionList;
 
@@ -45,7 +48,9 @@ public class App extends NanoHTTPD {
 
 		sessionList = new SessionList();
 
-		users = new HashSet<>();
+		users = new UserAccounts();
+
+		hasher = new Hasher();
 
 		loginTmp = getTemplate("docs/index.html");
 		btnTmp = getTemplate("docs/buttonpage.html");
@@ -94,28 +99,60 @@ public class App extends NanoHTTPD {
 			}
 		}
 
+		Session session = getSession(ihttpSession);
 		if (uri.equals("/")) {
-			Session session = getSession(ihttpSession);
 			if (session.getName() != null) {
 				return ss(btnTmp.render(getSessionDataMap(session)));
 			} else {
 				return ss(loginTmp.render(getSessionDataMap(session)));
 			}
+		} else if (uri.equals("/logout")) {
+			session.setName(null);
+			return redirect("/");
 		} else if (uri.equals("/signin")) {
-			Session session = getSession(ihttpSession);
 			String name = ihttpSession.getParms().get("name");
-			session.setName(name);
-			users.add(name);
+			String psw = ihttpSession.getParms().get("psw");
+			if (name != null && !name.trim().equals("")
+					&& psw != null && !psw.trim().equals("")) {
+				name = name.trim();
+				psw = psw.trim();
+				Account account = users.getAccount(name);
+				System.out.println("acc: " + account);
+				if (account == null) {
+					session.setName(name);
+					String salt = hasher.genSalt();
+					System.out.println("salt for " + name + " is " + salt);
+					String hashed = hasher.hash(psw, salt);
+					System.out.println("hashed for " + name + " is " + hashed);
+					users.addAccount(new Account(name, hashed, salt));
+				} else {
+					System.out.println("trying to login to account " + account.getName());
+					String salt = account.getSalt();
+					System.out.println("salt is " + salt);
+					System.out.println("hashed is "+ account.getHashed());
+					System.out.println("hi is " + hasher.hash("hi", salt));
+					String hash = hasher.hash(psw, salt);
+					System.out.println("our hashed psw is " + hash);
+					if (hasher.verify(psw, account.getHashed(), salt)) {
+						session.setName(name);
+					}
+				}
+			}
+			System.out.println(session.getName());
 			return redirect("/");
 		} else if (uri.equals("/give")) {
 			String name = ihttpSession.getParms().get("name");
 			String compliment = ihttpSession.getParms().get("compliment");
 			if (name != null && compliment != null) {
-				if (users.contains(name)) {
+				System.out.println("name: " + name);
+				System.out.println("accs: " + users.getAccounts());
+				Account account = users.getAccount(name);
+				System.out.println("acc: " + account);
+				if (account != null) {
 					System.out.println("analyzing " + compliment);
 					if (sentimentAnalysis.sentiment(compliment)) {
 						complimentStorage.store(name, compliment);
-						return ss("Your compliment was sent!");
+						return ss("Your compliment was sent! Here is your code: 100111");
 					} else {
 						return ss("Either your compliment is shit or our AI is, but either way, go fuck yourself.");
 					}
@@ -124,7 +161,7 @@ public class App extends NanoHTTPD {
 				}
 			}
 		} else if (uri.equals("/get")) {
-			String name = getSession(ihttpSession).getName();
+			String name = session.getName();
 			System.out.println("getting compliment for name: " + name);
 			if (name != null) {
 				String compliment = complimentStorage.get(name);
@@ -132,7 +169,7 @@ public class App extends NanoHTTPD {
 			}
 		} else if (uri.equals("/list")) {
 			StringBuilder listBuilder = new StringBuilder().append("[");
-			users.forEach(user -> listBuilder.append("\"").append(user).append("\","));
+			users.getAccounts().keySet().forEach(user -> listBuilder.append("\"").append(user).append("\","));
 			return ss(listBuilder.substring(0, listBuilder.length() - 1) + "]");
 		} else if (uri.startsWith("/static/")) {
 			Matcher m = STATIC_PATH_PATTERN.matcher(uri);

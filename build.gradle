@@ -27,6 +27,7 @@ dependencies {
 
     implementation group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '3.9.2'
     implementation group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '3.9.2', classifier: 'models'
+    implementation group: 'at.favre.lib', name: 'bcrypt', version: '0.7.0'
     implementation name: 'nanohttpd', group: 'org.nanohttpd', version: '2.3.2-SNAPSHOT'
 
     // Use JUnit test framework

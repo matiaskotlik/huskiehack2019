@@ -5,39 +5,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Buttons</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        html {
-            height: 100%;
-            background-color: #45b5dd;
-            color: white;
-        }
-        #signin-form {
-            width: 90%;
-            margin: auto;
-        }
-        #signin-form * {
-            width: 100%;
-            margin: auto;
-            padding: 2px;
-         }
-    </style>
 </head>
 <body>
 <div class="w3-container w3-card">
     <img id="header-img" src="/static/logo.png" alt="mySafespace logo">
 </div>
-
 <div class="w3-container">
     <hr>
     <div class="w3-cell-row">
         <form action="/signin" method="POST" id="signin-form">
             <p class="desc">Sign in or create an account here, just type in your name</p>
-            <input type="text" placeholder="Enter Name" name="name" id="name" required>
-            <!--<label for="psw"><b>Password</b></label>-->
-            <!--<input type="password" placeholder="Enter Password" name="psw" id="psw" required>-->
-            <div class="submit">
-                <button type="submit" class="signup-btn">Sign Up/In</button>
+            <div class="doublebar">
+                <div class="bar">
+                    <input type="text" placeholder="Enter Name" name="name" id="signup-name" autocomplete="off" required>
+                    <button type="submit" class="w3-button w3-teal signup-btn">Sign Up/In</button>
+                </div>
+                <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
             </div>
         </form>
     </div>
@@ -45,6 +32,13 @@
 </div>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script>
-    $('#header-img').width = screen.width;
+    $('#header-img').css('max-width', ($(window).width() * 0.8) + 'px');
+    var expand = true;
+    $('#signup-name').focus(function () {
+        if (expand) {
+            $('#psw').toggle(500);
+        }
+        expand = false;
+    });
 </script>
 </body>

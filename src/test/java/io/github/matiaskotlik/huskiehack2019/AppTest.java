@@ -3,31 +3,13 @@
  */
 package io.github.matiaskotlik.huskiehack2019;
 
-import io.github.matiaskotlik.huskiehack2019.ai.ComplimentsStorage;
+import io.github.matiaskotlik.huskiehack2019.cryptography.Hasher;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class AppTest {
 	@Test
 	public void testComplimentStorage() {
-		List<String> meganComps = new ArrayList<>(Arrays.asList(
-				"You like Mtn Dew!",
-				"You are a great coder!"));
-
-		ComplimentsStorage storage = new ComplimentsStorage();
-		storage.store("Matias Kotlik", "You hate Maven!");
-		storage.store("Megan Ja", meganComps.get(0));
-		storage.store("Megan Ja", meganComps.get(1));
-
-		assert storage.get("Matias Kotlik").equals("You hate Maven!");
-
-		String c1 = storage.get("Megan Ja");
-		assert meganComps.contains(c1);
-		meganComps.remove(meganComps.indexOf(c1));
-
-		assert storage.get("Megan Ja").equals(meganComps.get((0)));
+		Hasher hasher = new Hasher();
+		assert hasher.verify("1234", hasher.hash("1234", "1234"), "1234");
 	}
 }

@@ -11,6 +11,10 @@ public class Session {
 		this.name = name;
 	}
 
+	public void reset() {
+		this.name = null;
+	}
+
 	public String getName() {
 		return name;
 	}

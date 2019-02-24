@@ -4,48 +4,9 @@
     <title>Buttons</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link rel="stylesheet" href="/static/awesomplete.css">
+    <link rel="stylesheet" href="/static/styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-    p {
-        padding: 0;
-        margin: 0;
-    }
-    html {
-        height: 100%;
-        background-color: #45b5dd;
-        color: white;
-    }
-    .rightbar {
-        float: right;
-    }
-    .bar {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    #compliment-form, #submit-button {
-        display: none;
-    }
-    #compliment-form * {
-        margin-bottom: 5px;
-    }
-    #flex-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
-    }
-    #toggle-button, #receive-button {
-        -webkit-transition: width 2s;
-        transition: width 2s;
-    }
-    #header {
-        float: right;
-    }
-    .nowrap {
-        white-space: nowrap;
-    }
-    </style>
 </head>
 <body>
 <div class="w3-container w3-card">
@@ -55,29 +16,34 @@
 <div id="main-contain" class="w3-container">
     <hr>
     <div id="flex-container">
-        <div class="leftbar bar" id="give-container">
+        <div class="leftbar sidebar" id="give-container">
             <div id="compliment-form" style="display: block;">
                 <p class="nowrap">Who would you like to compliment?</p>
-                <p><input type="text" name="name" id="name" placeholder="Name"></p>
-                <textarea name="compliment" id="compliment" placeholder="Compliment"></textarea>
+                <p><input type="text" name="name" id="name" placeholder="Name" autocomplete="off"></p>
+                <textarea name="compliment" id="compliment" placeholder="Compliment" autocomplete="off"></textarea>
             </div>
             <div class="buttons">
                 <button class="w3-button w3-teal" onclick="submitCompliment()" id="submit-button" style="display: inline-block;">Submit Compliment
                 </button>
-                <button class="w3-button w3-teal" onclick="toggleCompliment()" id="toggle-button">Hide Compliment Form</button>
+                <button class="w3-button w3-teal" onclick="toggleCompliment()" id="toggle-button">Show Form</button>
             </div>
         </div>
-        <div id="rightbar" class="rightbar bar">
-            <button class="w3-button w3-teal" onclick="fetchCompliment()" id="receive-button">Receive</button>
+        <div id="rightbar" class="rightbar sidebar">
+            <button class="w3-button w3-teal" onclick="fetchCompliment()" id="receive-button">Receive Compliment</button>
         </div>
     </div>
     <hr>
+    <div>
+        <a href="/logout">Logout</a>
+    </div>
 </div>
 
+</div>
+<script src="/static/awesomplete.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 <script>
-let showComplimentMsg = "Hide Compliment Form"
-let hideComplimentMsg = "Show Compliment Form"
+let showComplimentMsg = "Hide Form"
+let hideComplimentMsg = "Show Form"
 
 let showReceiveMsg = 'Receive'
 let hideReceiveMsg = 'Receive Compliment'
@@ -90,6 +56,13 @@ function fetchCompliment() {
         alert(compliment);
     });
 }
+
+function submitCompliment() {
+    $.post('/give', {name: $('#name').val(), compliment: $('#compliment').val()}, function(response) {
+        alert(response);
+    });
+}
+
 function toggleCompliment() {
     $('#compliment-form').toggle('easing', function() {
         if ($('#compliment-form').is(':visible')) {
@@ -102,6 +75,11 @@ function toggleCompliment() {
     });
     $('#submit-button').toggle('easing');
 }
+
+var awesomplete = new Awesomplete(document.getElementById('name'), {minChars: 0});
+$.get('/list', function(json) {
+    awesomplete.list = JSON.parse(json)
+});
 
 </script>
 
