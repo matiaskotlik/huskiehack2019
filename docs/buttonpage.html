@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Buttons</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    p {
+        padding: 0;
+        margin: 0;
+    }
+    html {
+        height: 100%;
+        background-color: #45b5dd;
+        color: white;
+    }
+    .rightbar {
+        float: right;
+    }
+    .bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    #compliment-form, #submit-button {
+        display: none;
+    }
+    #compliment-form * {
+        margin-bottom: 5px;
+    }
+    #flex-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+    }
+    #toggle-button, #receive-button {
+        -webkit-transition: width 2s;
+        transition: width 2s;
+    }
+    #header {
+        float: right;
+    }
+    .nowrap {
+        white-space: nowrap;
+    }
+    </style>
+</head>
+<body>
+<div class="w3-container w3-card">
+    <h1 id="header">Logged in as: %name%</h1>
+</div>
+
+<div id="main-contain" class="w3-container">
+    <hr>
+    <div id="flex-container">
+        <div class="leftbar bar" id="give-container">
+            <div id="compliment-form" style="display: block;">
+                <p class="nowrap">Who would you like to compliment?</p>
+                <p><input type="text" name="name" id="name" placeholder="Name"></p>
+                <textarea name="compliment" id="compliment" placeholder="Compliment"></textarea>
+            </div>
+            <div class="buttons">
+                <button class="w3-button w3-teal" onclick="submitCompliment()" id="submit-button" style="display: inline-block;">Submit Compliment
+                </button>
+                <button class="w3-button w3-teal" onclick="toggleCompliment()" id="toggle-button">Hide Compliment Form</button>
+            </div>
+        </div>
+        <div id="rightbar" class="rightbar bar">
+            <button class="w3-button w3-teal" onclick="fetchCompliment()" id="receive-button">Receive</button>
+        </div>
+    </div>
+    <hr>
+</div>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script>
+let showComplimentMsg = "Hide Compliment Form"
+let hideComplimentMsg = "Show Compliment Form"
+
+let showReceiveMsg = 'Receive'
+let hideReceiveMsg = 'Receive Compliment'
+
+$('#compliment-form').hide();
+$('#submit-button').hide();
+
+function fetchCompliment() {
+    $.get('/get', function(compliment){
+        alert(compliment);
+    });
+}
+function toggleCompliment() {
+    $('#compliment-form').toggle('easing', function() {
+        if ($('#compliment-form').is(':visible')) {
+            $('#toggle-button').text(showComplimentMsg).fadeIn();
+            $('#receive-button').text(showReceiveMsg);
+        } else {
+            $('#toggle-button').text(hideComplimentMsg);
+            $('#receive-button').text(hideReceiveMsg);
+        }
+    });
+    $('#submit-button').toggle('easing');
+}
+
+</script>
+
+</body></html>

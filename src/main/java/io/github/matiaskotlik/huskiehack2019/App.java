@@ -8,17 +8,22 @@ import org.nanohttpd.protocols.http.IHTTPSession;
 import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.request.Method;
 import org.nanohttpd.protocols.http.response.Response;
+import org.nanohttpd.protocols.http.response.Status;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class App extends NanoHTTPD {
 	private Template loginTmp;
@@ -30,9 +35,10 @@ public class App extends NanoHTTPD {
 
 	private SessionList sessionList;
 
-	private Response response404;
-
 	private SentimentAnalysis sentimentAnalysis;
+
+	private static final Pattern STATIC_PATH_PATTERN = Pattern.compile("^/static/([a-zA-Z0-9\\.\\-]+)$");
+	private static final String LOCAL_DOCS_PATH = "docs/static/";
 
 	public App(int port) {
 		super(port);
@@ -41,14 +47,13 @@ public class App extends NanoHTTPD {
 
 		users = new HashSet<>();
 
-		loginTmp = getTemplate("/index.html");
-		btnTmp = getTemplate("/buttonpage.html");
+		loginTmp = getTemplate("docs/index.html");
+		btnTmp = getTemplate("docs/buttonpage.html");
 
 		complimentStorage = new ComplimentStorage();
 
 		sentimentAnalysis = new SentimentAnalysis();
-
-		response404 = Response.newFixedLengthResponse("Error 404 File Not Found");
+		sentimentAnalysis.sentiment("asdf");
 	}
 
 	public Session getSession(IHTTPSession ihttpSession) {
@@ -128,13 +133,34 @@ public class App extends NanoHTTPD {
 		} else if (uri.equals("/list")) {
 			StringBuilder listBuilder = new StringBuilder().append("[");
 			users.forEach(user -> listBuilder.append("\"").append(user).append("\","));
-			return ss(listBuilder.substring(0, listBuilder.length()-1) + "]");
+			return ss(listBuilder.substring(0, listBuilder.length() - 1) + "]");
+		} else if (uri.startsWith("/static/")) {
+			Matcher m = STATIC_PATH_PATTERN.matcher(uri);
+			if (m.find()) {
+				String name = m.group(1);
+				if (name != null) {
+					return FileResponse(LOCAL_DOCS_PATH + name);
+				}
+			}
 		}
-		return response404;
+		return Response.newFixedLengthResponse("Error 404 File not Found");
+	}
+
+	public Response FileResponse(String path) {
+		File file = new File(path);
+		String mime = NanoHTTPD.getMimeTypeForFile(file.getName());
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			System.err.println("Requested file: " + file.getPath() + ", not found.");
+			return Response.newFixedLengthResponse("File not Found");
+		}
+		return Response.newFixedLengthResponse(Status.OK, mime, fis, file.length());
 	}
 
 	public Response redirect(String uri) {
-		return Response.newFixedLengthResponse("<script>window.location.replace(\"" + uri +"\");</script>");
+		return Response.newFixedLengthResponse("<script>window.location.replace(\"" + uri + "\");</script>");
 	}
 
 	public Response ss(String msg) {
@@ -160,26 +186,15 @@ public class App extends NanoHTTPD {
 
 	public Template getTemplate(String path) {
 		try {
-			return new Template(getResource(path));
+			return new Template(getFile(path));
 		} catch (IOException e) {
-			System.err.println("Could not open resource at path " + path);
+			System.err.println("Could not open file at path " + path);
+			e.printStackTrace();
 		}
-		return new Template("Could not open resource");
+		return new Template("Could not open file");
 	}
 
-	public String getResource(String path) throws IOException {
-		InputStream in = getClass().getResourceAsStream(path);
-		return inputStreamToString(in);
-	}
-
-	public String inputStreamToString(InputStream inputStream) throws IOException {
-		try(ByteArrayOutputStream result = new ByteArrayOutputStream()) {
-			byte[] buffer = new byte[1024];
-			int length;
-			while ((length = inputStream.read(buffer)) != -1) {
-				result.write(buffer, 0, length);
-			}
-			return result.toString("UTF-8");
-		}
+	public String getFile(String path) throws IOException {
+		return new String(Files.readAllBytes(Paths.get(path)), StandardCharsets.UTF_8);
 	}
 }
