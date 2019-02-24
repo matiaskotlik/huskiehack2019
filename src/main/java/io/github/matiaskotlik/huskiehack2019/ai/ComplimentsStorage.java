@@ -1,9 +1,11 @@
-package io.github.matiaskotlik.huskiehack2019;
+package io.github.matiaskotlik.huskiehack2019.ai;
+
+import io.github.matiaskotlik.huskiehack2019.Storage;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ComplimentsStorage implements Storage<String>{
+public class ComplimentsStorage implements Storage<String> {
 
     ArrayList<String> allCompliments = new ArrayList<>();
 

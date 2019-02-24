@@ -1,4 +1,4 @@
-package io.github.matiaskotlik.huskiehack2019;
+package io.github.matiaskotlik.huskiehack2019.ai;
 
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import java.util.Properties;

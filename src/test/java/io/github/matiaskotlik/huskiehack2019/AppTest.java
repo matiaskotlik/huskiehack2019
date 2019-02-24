@@ -3,6 +3,7 @@
  */
 package io.github.matiaskotlik.huskiehack2019;
 
+import io.github.matiaskotlik.huskiehack2019.ai.ComplimentsStorage;
 import org.junit.Test;
 
 import java.util.ArrayList;

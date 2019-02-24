@@ -61,15 +61,17 @@ public class App extends NanoHTTPD {
 	public Response serve(IHTTPSession ihttpSession) {
 		Method method = ihttpSession.getMethod();
 		String uri = ihttpSession.getUri();
-		try {
-			ihttpSession.parseBody(new HashMap<>());
-		} catch (IOException e) {
-			System.err.println("Could not parse body");
-		} catch (ResponseException e) {
-			System.err.println("ResponseException when trying to parse body");
+
+		if (method.equals(Method.POST)) {
+			try {
+				ihttpSession.parseBody(new HashMap<>());
+			} catch (IOException e) {
+				System.err.println("Could not parse body");
+			} catch (ResponseException e) {
+				System.err.println("ResponseException when trying to parse body");
+			}
 		}
 
-		System.out.println(getSessionDataMap(getSession(ihttpSession)));
 		System.out.println(sessionList);
 
 		if (uri.equals("/")) {
@@ -83,6 +85,12 @@ public class App extends NanoHTTPD {
 			Session session = getSession(ihttpSession);
 			session.setName(ihttpSession.getParms().get("name"));
 			return redirect("/");
+		} else if (uri.equals("/give")) {
+			String name = ihttpSession.getParms().get("name");
+			String compliment = ihttpSession.getParms().get("compliment");
+			if (name != null && compliment != null) {
+				if ()
+			}
 		} else if (uri.equals("/get")) {
 			return ss("You have BEAUTIFUL HTML NOT!");
 		}

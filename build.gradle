@@ -25,6 +25,7 @@ dependencies {
     // This dependency is found on compile classpath of this component and consumers.
 //    implementation 'com.google.guava:guava:27.0.1-jre'
 
+    implementation group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '3.9.2'
     implementation name: 'nanohttpd', group: 'org.nanohttpd', version: '2.3.2-SNAPSHOT'
 
     // Use JUnit test framework
